@@ -15,3 +15,6 @@ MONTHS = {
   "November": "11",
   "Dezember": "12"
 }
+INPUT_STEPPER_VALUE_SELECTOR = 'span[data-bui-ref="input-stepper-value"]'
+INPUT_STEPPER_DECREASE = 'button[data-bui-ref="input-stepper-subtract-button"]'
+INPUT_STEPPER_INCREASE = 'button[data-bui-ref="input-stepper-add-button"]'

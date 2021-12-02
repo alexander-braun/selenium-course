@@ -2,15 +2,21 @@ from selenium import webdriver
 import booking.constants as const
 import os
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException    
 from booking.booking_filtration import BookingFiltration
+from booking.booking_report import BookingReport
+from prettytable import PrettyTable
 
 class Booking(webdriver.Chrome):
   def __init__(self, driver_path = r'../../chromedriver.exe', teardown = False):
     self.driver_path = driver_path
     self.teardown = teardown
     os.environ['PATH'] += self.driver_path
-    super(Booking, self).__init__()
+    
+    # remove unnecessary error messages
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    
+    super(Booking, self).__init__(options = options)
     self.implicitly_wait(15)
     self.maximize_window()
     
@@ -99,3 +105,14 @@ class Booking(webdriver.Chrome):
   def apply_filtrations(self, *desired_rating):
     filtration = BookingFiltration(driver = self)
     filtration.apply_star_rating(*desired_rating)
+    filtration.sort_by_lowest_price()
+    
+  def report_results(self):
+    hotel_boxes = self.find_elements(By.CSS_SELECTOR, 'div[data-testid="property-card"]')
+    report = BookingReport(hotel_boxes, self)
+    table = PrettyTable(
+      field_names = ["Hotel Name", "Hotel Price", "Hotel Score"]
+    )
+    table.add_rows(report.get_report())
+    print(table)
+    return True

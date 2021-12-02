@@ -15,3 +15,7 @@ class BookingFiltration():
       for value in desired_rating:
         if int(input.get_attribute('value').split('=')[1]) == value:
           input.find_element(By.XPATH, '..').click()
+          
+  def sort_by_lowest_price(self):
+    self.driver.implicitly_wait(10)
+    self.driver.find_element(By.CSS_SELECTOR, 'li[data-id="price"]').click()
